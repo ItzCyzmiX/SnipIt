@@ -12,10 +12,6 @@ export async function load({ setHeaders }) {
 
     
 
-    setHeaders({
-        'cache-control': 'public, max-age=3600, stale-while-revalidate=86400'
-    });
-
     return {
         snippets: data
     };

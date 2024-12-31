@@ -1,4 +1,6 @@
 <script>
+  import { HighlightSvelte } from "svelte-highlight";
+  import dracula from "svelte-highlight/styles/dracula";
   import { onMount } from 'svelte';
   import { slide, fade } from 'svelte/transition';
   let { data } = $props();
@@ -13,10 +15,12 @@
 
 
 
-  const languages = ['all', 'JavaScript', 'Python', 'Java', 'C++', 'Ruby'];
+  const langs = ['all', 'JavaScript', 'Python', 'Java', 'C++', 'Ruby'];
 </script>
-
-<main class="min-h-screen bg-black text-white pt-20  bg-gradient-to-b from-purple-900/20 to-transparent">
+<svelte:head>
+  {@html dracula}
+</svelte:head>
+<main class="min-h-screen bg-black text-white pt-20  bg-gradient-to-b from-purple-900/20 to-transparent ">
     <nav class="bg-gradient-to-b from-purple-900/20 to-transparent bg-opacity-5 backdrop-blur-sm border-b border-white/10 fixed w-full top-0 z-50 ">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-transparent">
           <div class="flex items-center justify-between h-16 bg-transparent">
@@ -44,9 +48,9 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <h1 class="text-4xl font-bold mb-8">Public Snippets</h1>
-    
+
     <div class="mb-8 flex gap-4 flex-wrap">
-      {#each languages as lang}
+      {#each langs as lang}
         <button
           class="px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200
                  {selectedLanguage === lang 
@@ -57,23 +61,39 @@
           {lang}
         </button>
       {/each}
+      <button
+      class="px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ml-auto bg-gradient-to-t from-purple-500/20 to-transparent border border-white/10 hover:border-white/20 hover:shadow-lg hover:shadow-purple-900/30 transition-all duration-200" 
+      onclick={() => {
+        window.location.reload();
+      }}
+    >
+  
+      Refresh
+    </button>
     </div>
 
-    <div class="grid gap-10 m-auto">
+    <div class="grid gap-10 m-auto  ">
       {#each snippets as snippet (snippet.id)}
         {#if snippet.language === selectedLanguage || selectedLanguage === 'all'}
 
         <div class=" bg-gradient-to-b from-purple-900/20 to-transparent rounded-lg p-6 border border-white/10 hover:border-white/20 transition-all duration-200 hover:shadow-lg hover:shadow-purple-900/30 hover:-translate-y-2" in:slide={{ duration: 150 }} out:fade={{ duration: 100 }}>
           <div class="flex justify-between items-center mb-4">
-            <div class="flex items-center gap-3">
-              <span class="text-purple-400">{snippet.language}</span>
-              <span class="text-gray-400">by {snippet.author}</span>
+            
+              
+            
+            <div class="">
+              <h1 class="text-2xl mb-2 font-bold">{snippet.name}</h1>
+
+              
+              <span class="text-gray-400 mr-1">by {snippet.author}</span>
+              <span class="text-gray-400 mr-1">•</span> <span class="text-purple-400">{snippet.language}</span>
             </div>
             <span class="text-gray-400 text-sm">{snippet.created_at}</span>
           </div>
-          <pre class="bg-black/30 p-4  rounded-lg overflow-x-auto text-left bg-transparent border-white/10 border-2">
-            <code class="text-left -ml-24">{snippet.code}</code>
-          </pre>
+          <div class="border-2 rounded-lg border-white/10">
+          
+            <HighlightSvelte class="custom-highlight" code={snippet.code}  />
+          </div>
           <div class="mt-4 flex justify-end gap-4">
             <button 
               class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2"
@@ -110,3 +130,8 @@
   </div>
 
 </main>
+<style>
+  :global(.hljs) {
+    background: #22222267 !important;
+  }
+</style>
