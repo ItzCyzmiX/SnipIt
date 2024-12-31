@@ -33,7 +33,8 @@ let loading = $state(false);
       body: JSON.stringify({
         code,
         author,
-        language
+        language,
+        snippetName
       })
     })
 
