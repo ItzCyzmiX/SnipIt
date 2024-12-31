@@ -1,59 +1,17 @@
 <script>
   import { onMount } from 'svelte';
   import { slide, fade } from 'svelte/transition';
-  let snippets = [];
-  let filteredSnippets = [];
-  let selectedLanguage = 'all';
-
-  // Mock data - replace with actual API call
-  onMount(() => {
-    snippets = [
-      {
-        id: 1,
-        code: 'console.log("Hello World!");',
-        language: 'JavaScript',
-        createdAt: '2023-07-01',
-        author: 'john_doe'
-      },
-      {
-        id: 2,
-        code: 'print("Hello World!")',
-        language: 'Python',
-        createdAt: '2023-07-02', 
-        author: 'jane_doe'
-      },
-      {
-        id: 5,
-        code: 'print("Hello World!")',
-        language: 'Python',
-        createdAt: '2023-07-02', 
-        author: 'jane_doe'
-      },
-      {
-        id: 4,
-        code: 'print("Hello World!")',
-        language: 'Python',
-        createdAt: '2023-07-02', 
-        author: 'jane_doe'
-      },
-      {
-        id: 3,
-        code: 'print("Hello World!")',
-        language: 'Python',
-        createdAt: '2023-07-02', 
-        author: 'jane_doe'
-      },
-      // Add more mock snippets
-    ];
-    filteredSnippets = snippets;
-  });
-
+  let { data } = $props();
+  let snippets = data.snippets
+ 
+  let selectedLanguage = $state('all');
   const filterByLanguage = (lang) => {
     selectedLanguage = lang;
-    filteredSnippets = lang === 'all' 
-      ? snippets
-      : snippets.filter(s => s.language === lang);
   };
+ 
+
+
+
 
   const languages = ['all', 'JavaScript', 'Python', 'Java', 'C++', 'Ruby'];
 </script>
@@ -94,7 +52,7 @@
                  {selectedLanguage === lang 
                    ? 'bg-purple-600 text-white' 
                    : 'bg-white/10 hover:bg-white/20 text-gray-300'}"
-          on:click={() => filterByLanguage(lang)}
+          onclick={() => filterByLanguage(lang)}
         >
           {lang}
         </button>
@@ -102,14 +60,16 @@
     </div>
 
     <div class="grid gap-10 m-auto">
-      {#each filteredSnippets as snippet (snippet.id)}
+      {#each snippets as snippet (snippet.id)}
+        {#if snippet.language === selectedLanguage || selectedLanguage === 'all'}
+
         <div class=" bg-gradient-to-b from-purple-900/20 to-transparent rounded-lg p-6 border border-white/10 hover:border-white/20 transition-all duration-200 hover:shadow-lg hover:shadow-purple-900/30 hover:-translate-y-2" in:slide={{ duration: 150 }} out:fade={{ duration: 100 }}>
           <div class="flex justify-between items-center mb-4">
             <div class="flex items-center gap-3">
               <span class="text-purple-400">{snippet.language}</span>
               <span class="text-gray-400">by {snippet.author}</span>
             </div>
-            <span class="text-gray-400 text-sm">{snippet.createdAt}</span>
+            <span class="text-gray-400 text-sm">{snippet.created_at}</span>
           </div>
           <pre class="bg-black/30 p-4  rounded-lg overflow-x-auto text-left bg-transparent border-white/10 border-2">
             <code class="text-left -ml-24">{snippet.code}</code>
@@ -117,7 +77,7 @@
           <div class="mt-4 flex justify-end gap-4">
             <button 
               class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2"
-              on:click={() => {
+              onclick={() => {
                 navigator.clipboard.writeText(snippet.code);
                 const btn = event.currentTarget;
                 btn.textContent = "Copied!";
@@ -143,7 +103,10 @@
             </button>
           </div>
         </div>
+        {/if}
       {/each}
     </div>
+    
   </div>
+
 </main>

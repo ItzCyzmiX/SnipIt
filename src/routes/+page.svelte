@@ -4,6 +4,7 @@
   let copied = false;
   let author = '';
   let language = '';
+  
   let snippet = `
 function fibonacci(n) {
   if (n <= 1) return n;
@@ -18,6 +19,24 @@ function fibonacci(n) {
     const newSection = document.getElementById('new');
     newSection.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const newSnippet = async () => {
+    const res = await fetch('/', {
+      method: 'POST',
+      body: JSON.stringify({
+        code,
+        author,
+        language
+      })
+    })
+
+    if (res.status === 200) {
+      alert('New Snippet Added!')
+    } else  {
+      alert('Erro while creating snippet trry again later!')
+    }
+
+  }
 </script>
 
 <svelte:head>
@@ -39,10 +58,10 @@ function fibonacci(n) {
           </a>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="/snippets" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+          <a href="/snippets" data-sveltekit-preload-data="hover" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
             Public Snippets
           </a>
-          <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200" on:click={scrollToNew}>
+          <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200" onclick={scrollToNew}>
             New Snippet
           </button>
         </div>
@@ -163,6 +182,7 @@ const debounce = (fn, delay) => {
 
 
           <button
+          onclick={newSnippet}
             class="bg-white text-black
                    hover:from-emerald-600 hover:to-teal-700 px-8 py-3 rounded-lg
                    transition-all duration-200 focus:outline-none focus:ring-2 
