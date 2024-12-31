@@ -12,7 +12,8 @@ export async function POST({ request }) {
                             .insert([
                                 {   code: req.code, 
                                     author: req.author,
-                                    language: req.language 
+                                    language: req.language,
+                                    name: req.snippetName
                                 },
                             ]).select()
         console.log(data, error)
