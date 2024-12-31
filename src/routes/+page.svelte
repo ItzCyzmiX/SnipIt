@@ -6,6 +6,7 @@
   let author = $state('');
   let language = $state('');
   let snippetName = $state('');
+  let created = $state(false)
   let snippet = `
 function fibonacci(n) {
   if (n <= 1) return n;
@@ -42,7 +43,10 @@ let loading = $state(false);
       error = 'Error while creating snippet try again later!'
       setTimeout(() => error = '', 2000);
       return;
-    } 
+    } else {
+      created = true
+      setTimeout(() => created = '', 2000);
+    }
 
   }
 </script>
@@ -213,6 +217,23 @@ const debounce = (fn, delay) => {
                 onclick={() => {
                   error = '';
                   setTimeout(() => error = '', 2000);
+                }}>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          {/if}
+           {#if created}
+            <div class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 z-50 border-2 border-white/10 shadow-lg shadow-green-900/30" in:slide out:fade>
+  
+              Snippet created succsesfully!
+              <button
+                aria-label="Close"
+                class="ml-2 text-white hover:text-gray-300 transition-colors "
+                onclick={() => {
+                  created = '';
+                  setTimeout(() => created = '', 2000);
                 }}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
